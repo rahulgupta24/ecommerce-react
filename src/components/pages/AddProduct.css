@@ -1,0 +1,9 @@
+/* CreateProduct.css */
+.create-product {
+  padding: 20px;
+}
+
+.create-product h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}

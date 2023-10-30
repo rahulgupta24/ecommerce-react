@@ -1,0 +1,18 @@
+/* Home.css */
+.home {
+  padding: 20px;
+  text-align: center; /* Center text within the home container */
+}
+
+.home h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust the column width as needed */
+  gap: 20px;
+  justify-items: center; /* Center the grid items horizontally */
+}
