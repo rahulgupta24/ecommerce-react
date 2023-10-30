@@ -1,4 +1,3 @@
-// Home.js
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import ProductCard from '../common/productCard';
@@ -11,43 +10,54 @@ import './Home.css';
 const Home = ({ products, fetchProducts, editProduct, deleteProduct }) => {
     const [sorting, setSorting] = useState(false);
     const [sortedProducts, setSortedProducts] = useState(products);
-    const [editing, setEditing] = useState(false);
-    const [editedProduct, setEditedProduct] = useState({});
 
-
-        useEffect(() => {
-            console.log('Fetching products...');
-            fetchProductsFromAPI()
-                .then((response) => {
-                    console.log('API Response:', response);
-                    fetchProducts(response); // Pass the array of products directly
-                    // Additional logging to check products data
-                    console.log('Products:', response);
-                })
-                .catch((error) => {
-                    console.error('Error fetching products:', error);
-                });
-        }, [fetchProducts]);
+    useEffect(() => {
+        console.log('Fetching products...');
+        fetchProductsFromAPI()
+            .then((response) => {
+                console.log('API Response:', response);
+                fetchProducts(response); // Pass the array of products directly
+                // Additional logging to check products data
+                console.log('Products:', response);
+            })
+            .catch((error) => {
+                console.error('Error fetching products:', error);
+            });
+    }, [fetchProducts]);
 
     const handleEditClick = (product) => {
-        setEditing(true);
-        setEditedProduct(product);
-    };
-
-    const handleCancelEdit = () => {
-        setEditing(false);
-        setEditedProduct({});
-    };
-
-    const handleInputChange = (name, value) => {
-        setEditedProduct({
-            ...editedProduct,
-            [name]: value,
+        const updatedProducts = sortedProducts.map((p) => {
+            if (p.id === product.id) {
+                return { ...p, isEditing: true };
+            } else {
+                return { ...p, isEditing: false };
+            }
         });
+        setSortedProducts(updatedProducts);
     };
 
-    const handleEdit = () => {
-        editProductAPI(editedProduct.id, editedProduct)
+    const handleCancelEdit = (product) => {
+        const updatedProducts = sortedProducts.map((p) => {
+            if (p.id === product.id) {
+                return { ...p, isEditing: false };
+            }
+            return p;
+        });
+        setSortedProducts(updatedProducts);
+    };
+
+    const handleInputChange = (name, value, product) => {
+        const updatedProducts = sortedProducts.map((p) => {
+            if (p.id === product.id) {
+                return { ...p, [name]: value };
+            }
+            return p;
+        });
+        setSortedProducts(updatedProducts);
+    };
+
+    const handleEdit = (product) => {
+        editProductAPI(product.id, product)
             .then((response) => {
                 toast.success('Product is Edited', {
                     position: 'top-right',
@@ -55,8 +65,7 @@ const Home = ({ products, fetchProducts, editProduct, deleteProduct }) => {
                 });
                 console.log('Product edited:', response);
                 editProduct(response.data);
-                setEditing(false);
-                setEditedProduct({});
+                handleCancelEdit(product);
             })
             .catch((error) => {
                 console.error('Error editing product:', error);
@@ -74,18 +83,16 @@ const Home = ({ products, fetchProducts, editProduct, deleteProduct }) => {
             });
     }
 
+    // Sort the products when sorting changes
     useEffect(() => {
         if (sorting) {
             const sorted = [...products].sort((a, b) => a.price - b.price);
             setSortedProducts(sorted);
         } else {
-            setSortedProducts([...products]); // Create a new copy of the original products array
+            setSortedProducts(products); // Reset the sortedProducts when sorting is turned off
         }
-    }, [products, sorting]);
+    }, [sorting, products]); // Include products as a dependency
 
-
-    // Additional logging to check the contents of sortedProducts
-    console.log('Sorted Products:', sortedProducts);
 
     return (
         <div className="home">
@@ -95,25 +102,20 @@ const Home = ({ products, fetchProducts, editProduct, deleteProduct }) => {
                     &#10005; Close Sorting
                 </button>
             ) : (
-                <button onClick={() => setSorting(true)}>
-                    {sorting ? 'Close Sorting' : 'Sort Products'}
-                </button>
+                <button onClick={() => setSorting(true)}>Sort Products</button>
             )}
             <div className="product-list">
                 {sortedProducts &&
                     sortedProducts.map((product) => (
-                       
                         <ProductCard
                             key={product.id}
-                            product={product} // Pass the product, not editedProduct
+                            product={product}
                             onEdit={handleEditClick}
                             onDelete={() => handleDelete(product.id)}
-                            editing={editing}
-                            onInputChange={handleInputChange}
-                            onSave={handleEdit}
-                            onCancelEdit={handleCancelEdit}
+                            onInputChange={(name, value) => handleInputChange(name, value, product)}
+                            onSave={() => handleEdit(product)}
+                            onCancelEdit={() => handleCancelEdit(product)}
                         />
-
                     ))}
             </div>
         </div>

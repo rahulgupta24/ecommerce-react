@@ -3,17 +3,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { addToCart } from '../../actions/cartActions';
 import { Link } from 'react-router-dom';
-import './productCard.css'; // Import the CSS file
+import './productCard.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
-const ProductCard = ({ product, onEdit, onDelete, cartItems, addToCart, editing, onInputChange, onSave, onCancelEdit }) => {
-    const handleEditClick = () => {
-        onEdit(product);
-    };
-
+const ProductCard = ({ product, onEdit, onDelete, cartItems, addToCart, onInputChange, onSave, onCancelEdit }) => {
     const handleDeleteClick = () => {
         if (product && product.id) {
             onDelete(product.id);
@@ -45,6 +41,14 @@ const ProductCard = ({ product, onEdit, onDelete, cartItems, addToCart, editing,
         }
     };
 
+    const handleStartEditing = () => {
+        onEdit(product);
+    };
+
+    const handleCancelEditing = () => {
+        onCancelEdit(product);
+    };
+
     return (
         <div className="product-card">
             <div className="product-details-container">
@@ -52,36 +56,39 @@ const ProductCard = ({ product, onEdit, onDelete, cartItems, addToCart, editing,
                     <img src={product.image} alt={product.name} className="product-image" />
                 </div>
                 <div className="product-description-container">
-                    {editing ? (
+                    {product.isEditing ? (
+                        // Check if the product is in edit mode
+                        // Display the editable fields
                         <div>
                             <input
                                 type="text"
                                 name="name"
-                                value={product.name} // Use product.name
+                                value={product.name}
                                 onChange={(e) => onInputChange('name', e.target.value)}
                             />
                             <input
                                 type="text"
                                 name="image"
-                                value={product.image} // Use product.image
+                                value={product.image}
                                 onChange={(e) => onInputChange('image', e.target.value)}
                             />
                             <input
                                 type="number"
                                 name="price"
-                                value={product.price} // Use product.price
+                                value={product.price}
                                 onChange={(e) => onInputChange('price', e.target.value)}
                             />
                             <button onClick={onSave}>Save</button>
-                            <button onClick={onCancelEdit}>Cancel</button>
+                            <button onClick={handleCancelEditing}>Cancel</button>
                         </div>
                     ) : (
+                        // Display the product details and buttons
                         <div>
                             <h3 className="product-name">{product.name}</h3>
                             <p className="product-description">{product.description}</p>
                             <span className="product-price">${product.price}</span>
                             <div className="buttons-container">
-                                <button className="edit-button" onClick={handleEditClick}>
+                                <button className="edit-button" onClick={handleStartEditing}>
                                     <FontAwesomeIcon icon={faEdit} /> Edit
                                 </button>
                                 <button className="delete-button" onClick={handleDeleteClick}>

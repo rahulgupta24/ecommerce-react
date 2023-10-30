@@ -55,6 +55,7 @@ export const editProduct = async (productId, updatedProduct) => {
 // Function to delete a product by sending a DELETE request to the API
 export const deleteProduct = async (productId) => {
     try {
+        console.log("delete productId", productId)
         const response = await axios.delete(`${API_BASE_URL}/products/${productId}`);
         return response.data;
     } catch (error) {

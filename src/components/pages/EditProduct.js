@@ -1,8 +1,8 @@
 // EditProduct.js
 import React, { useState } from 'react';
-import './EditProduct.css'; // Import the associated CSS file
+import './EditProduct.css';
 
-const EditProduct = ({ product, onSave, onCancel }) => {
+const EditProduct = ({ product, onSave, onCancel, editing }) => {
     const [editedProduct, setEditedProduct] = useState({ ...product });
 
     const handleInputChange = (e) => {
@@ -16,7 +16,6 @@ const EditProduct = ({ product, onSave, onCancel }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onSave(editedProduct);
-        
     };
 
     return (
@@ -31,6 +30,7 @@ const EditProduct = ({ product, onSave, onCancel }) => {
                         name="name"
                         value={editedProduct.name}
                         onChange={handleInputChange}
+                        readOnly={!editing} // Make the input read-only when not editing
                     />
                 </div>
                 <div className="input-field">
@@ -41,6 +41,7 @@ const EditProduct = ({ product, onSave, onCancel }) => {
                         name="description"
                         value={editedProduct.description}
                         onChange={handleInputChange}
+                        readOnly={!editing}
                     />
                 </div>
                 <div className="input-field">
@@ -51,6 +52,7 @@ const EditProduct = ({ product, onSave, onCancel }) => {
                         name="price"
                         value={editedProduct.price}
                         onChange={handleInputChange}
+                        readOnly={!editing}
                     />
                 </div>
                 <div className="input-field">
@@ -61,11 +63,15 @@ const EditProduct = ({ product, onSave, onCancel }) => {
                         name="image"
                         value={editedProduct.image}
                         onChange={handleInputChange}
+                        readOnly={!editing}
                     />
                 </div>
                 <div className="buttons">
-                    <button type="submit">Save</button>
-                    <button type="button" onClick={onCancel}>Cancel</button>
+                    {editing ? (
+                        <button type="submit">Save</button>
+                    ) : (
+                        <button type="button" onClick={onCancel}>Cancel</button>
+                    )}
                 </div>
             </form>
         </div>
