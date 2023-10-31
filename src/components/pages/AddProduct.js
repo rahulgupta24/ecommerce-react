@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { addProduct } from '../../actions/productActions'; // Import the addProduct action
 import { addProductToAPI } from '../../services/productService';
 import './AddProduct.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddProduct = ({ addProduct }) => {
     const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0 });
@@ -21,7 +23,10 @@ const AddProduct = ({ addProduct }) => {
         addProductToAPI(newProduct)
             .then((response) => {
                 console.log('Product added:', response);
-
+                toast.success(`product is added`, {
+                    position: 'top-right',
+                    autoClose: 3000,
+                })
                 // Dispatch the addProduct action to update the store
                 addProduct(response); // Use response directly, no need to access response.data
             })

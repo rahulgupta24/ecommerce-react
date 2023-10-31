@@ -1,9 +1,37 @@
-/* CreateProduct.css */
-.create-product {
-  padding: 20px;
+/* AddProduct.css */
+
+.add-product {
+    padding: 20px;
 }
 
-.create-product h2 {
-  font-size: 20px;
-  margin-bottom: 20px;
+.add-product h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.add-product form {
+    margin-top: 20px;
+}
+
+.add-product input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.add-product button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.add-product button:hover {
+    background-color: #0056b3;
 }
