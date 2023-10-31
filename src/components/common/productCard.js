@@ -89,7 +89,7 @@ const ProductCard = ({ product, onEdit, onDelete, cartItems, addToCart, onInputC
                             <span className="product-price">${product.price}</span>
                             <div className="buttons-container">
                                 <button className="edit-button" onClick={handleStartEditing}>
-                                    <FontAwesomeIcon icon={faEdit} /> Edit
+                                    <FontAwesomeIcon icon={faEdit} /> <br/>Edit
                                 </button>
                                 <button className="delete-button" onClick={handleDeleteClick}>
                                     <FontAwesomeIcon icon={faTrash} /> Delete
